@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="notifications-container">
+    <h2>Notifications</h2>
+
+    {% if notifications %}
+        <ul class="notifications-list">
+            {% for notification in notifications %}
+                <li class="notification-item {% if not notification.is_read %}unread{% endif %}">
+                    {% if notification.from_user.profile.profile_image %}
+                        <img src="{{ notification.from_user.profile.profile_image.url }}" class="profile-small">
+                    {% else %}
+                        <img src="{% static 'images/default.jpg' %}" class="profile-small">
+                    {% endif %}
+
+                    <div class="notification-text">
+                        <a href="{{ notification.link }}" class="notif-link">
+                            {{ notification.text }}
+                        </a>
+                        <span class="notif-time">{{ notification.created_at|naturaltime }}</span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-notifs">You have no notifications.</p>
+    {% endif %}
+</div>
+{% endblock %}

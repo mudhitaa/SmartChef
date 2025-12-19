@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SmartChef Chat AI{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/chat.css' %}?v={% now 'U' %}">
+
+<div class="chat-wrapper">
+
+    <h2 class="chat-title"><i class="fas fa-robot"></i> SmartChef AI Assistant</h2>
+
+    <div id="chat-box" class="chat-box"></div>
+
+    <div class="chat-input-container">
+        <input type="text" id="user-input" placeholder="Ask SmartChef anything about recipes...">
+        <button id="send-btn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+
+</div>
+
+<script>
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+
+    function appendMessage(sender, text) {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("message", sender);
+
+        // Convert newline → <br> for formatting
+        const formatted = text.replace(/\n/g, "<br>");
+
+        msgDiv.innerHTML = `${formatted}`;
+
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    sendBtn.addEventListener("click", async () => {
+        const question = userInput.value.trim();
+        if (!question) return;
+
+        appendMessage("user", question);
+        userInput.value = "";
+
+        const response = await fetch("/assistant/ask/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question })
+        });
+
+        const data = await response.json();
+        if (data.answer) {
+            appendMessage("bot", data.answer);
+        } else {
+            appendMessage("bot", "Error: " + data.error);
+        }
+    });
+
+    // Press Enter to send
+    userInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") sendBtn.click();
+    });
+</script>
+
+{% endblock %}

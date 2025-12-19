@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}SmartChef{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v={% now "U" %}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet"> 
+</head>
+
+<body>
+
+<!-- Navbar -->
+<header class="dashboard-header">
+    <div class="logo">
+        <img src="{% static 'images/chef.png' %}" alt="Chef Logo">
+        <span class="logo-text">SMARTCHEF</span>
+    </div>
+
+    <div class="search-bar">
+        <form method="GET" action="{% url 'dashboard_home' %}">
+            <input type="text" name="q" placeholder="Search recipes or users..."
+                   value="{{ query|default:'' }}">
+        </form>
+    </div>
+
+    
+    <nav class="nav-links">
+        <a href="{% url 'dashboard_home' %}" title="Home"><i class="fas fa-home"></i></a>
+        <a href="{% url 'dashboard_profile' request.user.username %}" title="Profile"><i class="fas fa-user"></i></a>
+        <a href="{% url 'notifications' %}" class="notification-icon">
+            <i class="fas fa-bell"></i>
+            {% if unread_notifications_count > 0 %}
+                <span class="notification-badge">{{ unread_notifications_count }}</span>
+            {% endif %}
+        </a>
+
+        <a href="{% url 'settings' %}" class="settings-icon" title="Settings"><i class="fas fa-cog"></i></a>
+        <a href="/assistant/generate/" title="AI Recipe Maker">
+                <i class="fas fa-utensils"></i>
+            </a>
+    </nav>
+
+
+
+</header>
+
+<!-- Messages -->
+{% if messages %}
+<div id="msg-container" class="messages-container">
+    {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Page Content -->
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<script>
+    // Auto-hide Django messages after 3 seconds
+    setTimeout(function () {
+        let messages = document.getElementById('msg-container');
+        if (messages) {
+            messages.style.transition = "opacity 0.5s ease";
+            messages.style.opacity = "0";
+
+            // Remove permanently after fade-out
+            setTimeout(() => messages.remove(), 600);
+        }
+    }, 1200);
+
+    document.addEventListener("DOMContentLoaded", () => {
+    const notifWrapper = document.querySelector('.notification-wrapper');
+    const notifCount = document.querySelector('.notif-count');
+
+    notifWrapper.addEventListener('mouseenter', () => {
+        // Only send request if there are unread notifications
+        if (notifCount && parseInt(notifCount.textContent) > 0) {
+            fetch("{% url 'mark_notifications_read' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',  // ensure CSRF token is included
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    // Set the count badge to 0 immediately
+                    notifCount.textContent = 0;
+
+                    // Optionally, remove the "unread" highlight
+                    document.querySelectorAll('.notif-item.unread').forEach(item => {
+                        item.classList.remove('unread');
+                    });
+                }
+            })
+            .catch(err => console.error('Error marking notifications read:', err));
+        }
+    });
+});
+
+</script>
+
+
+</body>
+<!-- Assistant widget include -->
+{% include "assistant/_widget.html" %}
+<link rel="stylesheet" href="{% static 'css/assistant_widget.css' %}?v={% now 'U' %}">
+<script src="{% static 'js/assistant_widget.js' %}?v={% now 'U' %}" defer></script>
+</html>

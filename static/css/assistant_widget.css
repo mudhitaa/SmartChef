@@ -1,0 +1,168 @@
+/* assistant_widget.css - floating bubble + slide panel */
+#sc-assistant-root {
+    position: fixed;
+    right: 24px !important;
+    bottom: 24px !important;
+    z-index: 99999 !important;
+    transform: none !important;
+}
+
+/* bubble */
+.sc-assistant-bubble {
+    position: relative;
+    right: -260px;  /* negative moves bubble left */
+    bottom: -490px; /* negative moves bubble up */
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: #4a90e2;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    font-size: 20px;
+}
+
+
+/* panel */
+.sc-assistant-panel {
+    width: 360px;
+    max-width: calc(100vw - 48px);
+    height: 520px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(20px) scale(.98);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .2s ease;
+    margin-bottom: 12px;
+}
+
+/* open state */
+.sc-widget-open .sc-assistant-panel {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* header */
+.sc-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+}
+
+.sc-panel-title {
+    font-weight: 600;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 15px;
+}
+
+.sc-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* body */
+.sc-panel-body {
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+    background: #fafafa;
+}
+
+/* chat bubbles */
+.sc-chat .sc-msg {
+    margin: 10px 0;
+    display: flex;
+    max-width: 100%;
+}
+
+.sc-chat .sc-msg .bubble {
+    padding: 10px 12px;
+    border-radius: 12px;
+    line-height: 1.4;
+    max-width: 80%;
+}
+
+.sc-chat .sc-msg.user {
+    justify-content: flex-end;
+}
+
+.sc-chat .sc-msg.user .bubble {
+    background: #4a90e2;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.sc-chat .sc-msg.bot {
+    justify-content: flex-start;
+}
+
+.sc-chat .sc-msg.bot .bubble {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    color: #111;
+    border-bottom-left-radius: 4px;
+}
+
+/* footer */
+.sc-panel-footer {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    border-top: 1px solid #eee;
+    background: #fff;
+}
+
+#sc-input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.sc-send-btn {
+    background: #4a90e2;
+    color: white;
+    border: none;
+    padding: 9px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* compact states */
+.sc-widget-closed .sc-assistant-panel {
+    display: block;
+}
+
+/* keep in DOM but hidden */
+
+/* responsive */
+@media (max-width:480px) {
+    .sc-assistant-panel {
+        width: 92vw;
+        height: 70vh;
+        right: 8px;
+        bottom: 8px;
+    }
+
+    #sc-assistant-root {
+        right: 8px;
+        bottom: 8px;
+    }
+}
