@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Edit Recipe{% endblock %}
+
+{% block content %}
+<section class="upload-section">
+    <h2>Edit Recipe</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="upload-form">
+        {% csrf_token %}
+
+        <input type="text" name="title" value="{{ recipe.title }}" required>
+
+        <input type="text" name="cuisine" value="{{ recipe.cuisine }}" required>
+
+        <input type="text" name="prep_time" value="{{ recipe.prep_time }}" required>
+
+        <input type="text" name="cook_time" value="{{ recipe.cook_time }}" required>
+
+        <div class="difficulty-buttons">
+            <label class="btn">
+                <input type="radio" name="difficulty" value="Easy" {% if recipe.difficulty == "Easy" %}checked{% endif %}> Easy
+            </label>
+            <label class="btn">
+                <input type="radio" name="difficulty" value="Medium" {% if recipe.difficulty == "Medium" %}checked{% endif %}> Medium
+            </label>
+            <label class="btn">
+                <input type="radio" name="difficulty" value="Hard" {% if recipe.difficulty == "Hard" %}checked{% endif %}> Hard
+            </label>
+        </div>
+
+        <textarea name="ingredients" required>{{ recipe.ingredients }}</textarea>
+        <textarea name="short_description" required>{{ recipe.short_description }}</textarea>
+
+        <label>Change Image (optional)</label>
+        <input type="file" name="image" accept="image/*">
+
+        <label>Change Video (optional)</label>
+        <input type="file" name="video" accept="video/*">
+
+        <button type="submit">Update Recipe</button>
+    </form>
+</section>
+{% endblock %}

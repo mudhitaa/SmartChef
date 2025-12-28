@@ -175,6 +175,57 @@ def upload_recipe(request):
     return render(request, "upload_recipe.html")
 
 
+
+
+
+@login_required
+def edit_recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+
+    # Only owner can edit
+    if recipe.user != request.user:
+        messages.error(request, "You are not allowed to edit this recipe.")
+        return redirect("dashboard_profile", username=request.user.username)
+
+    if request.method == "POST":
+        title = request.POST.get("title")
+        short_description = request.POST.get("short_description")
+        ingredients = request.POST.get("ingredients")
+        difficulty = request.POST.get("difficulty")
+        cuisine = request.POST.get("cuisine")
+        prep_time = request.POST.get("prep_time")
+        cook_time = request.POST.get("cook_time")
+
+        image = request.FILES.get("image")
+        video = request.FILES.get("video")
+
+        # Prevent duplicate title (exclude current recipe)
+        if Recipe.objects.filter(
+            user=request.user, title=title
+        ).exclude(id=recipe.id).exists():
+            messages.error(request, "You already have a recipe with this title.")
+            return redirect("edit_recipe", recipe_id=recipe.id)
+
+        recipe.title = title
+        recipe.short_description = short_description
+        recipe.ingredients = ingredients
+        recipe.difficulty = difficulty
+        recipe.cuisine = cuisine
+        recipe.prep_time = prep_time
+        recipe.cook_time = cook_time
+
+        if image:
+            recipe.image = image
+        if video:
+            recipe.video = video
+
+        recipe.save()
+        messages.success(request, "Recipe updated successfully.")
+        return redirect("recipe_detail", recipe_id=recipe.id)
+
+    return render(request, "edit_recipe.html", {"recipe": recipe})
+
+
 # Edit Profile
 
 @login_required

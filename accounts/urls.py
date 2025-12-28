@@ -14,6 +14,8 @@ urlpatterns = [
     path('dashboard/', views.dashboard_profile, name='dashboard_profile'),  # profile page
     path('dashboard/home/', views.dashboard_home, name='dashboard_home'),   # feed page
     path('dashboard/upload/', views.upload_recipe, name='upload_recipe'),
+    path('dashboard/recipe/edit/<int:recipe_id>/', views.edit_recipe, name='edit_recipe'),
+
     path('dashboard/edit-profile/', views.edit_profile, name='edit_profile'),
     path('recipe/<int:recipe_id>/', views.recipe_detail, name='recipe_detail'),
     path('recipe/<int:recipe_id>/like/', views.like_recipe, name='like_recipe'),

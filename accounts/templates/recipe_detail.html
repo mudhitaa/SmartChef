@@ -80,9 +80,15 @@
             <form method="POST" action="{% url 'like_recipe' recipe.id %}" class="like-form"> 
                 {% csrf_token %} 
                 <button type="submit"> 
-                    {% if user in recipe.likes.all %}❤️{% else %}🤍{% endif %} {{ recipe.total_likes }} 
+                    {% if user in recipe.likes.all %}❤️{% else %}🤍{% endif %}{{ recipe.total_likes }} 
                 </button> 
             </form>
+
+           {% if recipe.user == request.user %}
+                <a href="{% url 'edit_recipe' recipe.id %}" class="edit-icon" title="Edit Recipe">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+            {% endif %}
  
             <div class="delete-actions">
             {% if user == recipe.user %}
@@ -99,6 +105,7 @@
             </div>
 
     </div>
+    
 
     
 
@@ -111,6 +118,8 @@
                     Who liked my recipe?
                 </a>
             {% endif %}
+
+    
     <h3>Comments</h3>
 
     <div class="comments">
