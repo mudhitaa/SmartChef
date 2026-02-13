@@ -34,31 +34,33 @@
 
             <!-- Profile Actions -->
             <div class="profile-actions">
-                {% if user == request.user %}
-                    <!-- Own profile -->
-                    <a href="{% url 'upload_recipe' %}" class="btn" title="Upload Recipe">
-                        <i class="fas fa-upload"></i>
-                    </a>
-                    <a href="{% url 'edit_profile' %}" class="btn" title="Edit Profile">
-                        <i class="fas fa-user-edit"></i>
-                    </a>
-                    <div class ="own-total-likes"> 
-                        <p>Likes : {{ total_likes }}</p>
-                    </div>
-                {% else %}
-                    {% if is_following %}
-                        <a href="{% url 'unfollow_user' user.id %}" class="btn-unfollow">Unfollow</a>
-                    {% else %}
-                        <a href="{% url 'follow_user' user.id %}" class="btn-follow">Follow</a>
-                    {% endif %}
-                    <div class ="total-likes"> 
-                        <p>Likes : {{ total_likes }}</p>
-                        
-                    </div>
-                {% endif %}
 
-                
+                <div class="action-left">
+                    {% if user == request.user %}
+                        <a href="{% url 'upload_recipe' %}" class="btn" title="Upload Recipe">
+                            <i class="fas fa-upload"></i>
+                        </a>
+                        <a href="{% url 'edit_profile' %}" class="btn" title="Edit Profile">
+                            <i class="fas fa-user-edit"></i>
+                        </a>
+                        <a href="{% url 'saved_recipes' %}" class="btn" title="Bookmarks">
+                            <i class="fa-regular fa-bookmark"></i>
+                        </a>
+                    {% else %}
+                        {% if is_following %}
+                            <a href="{% url 'unfollow_user' user.id %}" class="btn-unfollow">Unfollow</a>
+                        {% else %}
+                            <a href="{% url 'follow_user' user.id %}" class="btn-follow">Follow</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="total-likes">
+                    <p>Likes : {{ total_likes }}</p>
+                </div>
+
             </div>
+
         </div>
     </div>
 

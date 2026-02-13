@@ -246,6 +246,9 @@ button {
     gap: 2rem;
 }
 
+.details {
+    width: 100%;
+}
 
 .user-info {
     display: flex;
@@ -298,12 +301,30 @@ button {
 
 
 /* ===== Profile Action Buttons ===== */
+/* ===== Profile Action Layout Fix ===== */
 .profile-actions {
-    margin-top: 1px;
     display: flex;
-    gap: 5px; /* space between buttons */
-    justify-content: flex-start; /* left align; change to center or flex-end if needed */
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
 }
+
+/* Left side buttons */
+.profile-actions .action-left {
+    display: flex;
+    gap: 0px;
+}
+
+/* Total likes on right */
+.profile-actions .total-likes {
+    font-size: 15px;
+    color: rgb(10, 86, 42);
+    font-weight: bold;
+    padding-right: 4rem;
+}
+
+
 
 /* Common style for all profile action buttons */
 .profile-actions .btn {
@@ -318,6 +339,8 @@ button {
     position: relative;
     margin-top: 0.5rem;
 }
+
+
 
 /* Hover effect */
 .profile-actions .btn:hover {
@@ -351,46 +374,24 @@ button {
     background-color: #e5832d;
 }
 
-.profile-actions a.btn-follow {
-    width: auto;
-    padding: 0.5rem 1rem;
-    border-radius: 2rem;
-    background-color: #CA6D1C; /* blue follow */
-    color: #fff;
-    font-weight: bold;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    margin-top: 1.5rem;
-    margin-bottom: 0.7rem;
-}
+.profile-actions a.btn-follow,
 .profile-actions a.btn-unfollow {
     width: auto;
     padding: 0.5rem 1rem;
     border-radius: 2rem;
-    background-color: #CA6D1C; /* blue follow */
+    background-color: #CA6D1C;
     color: #fff;
     font-weight: bold;
     font-size: 15px;
     transition: all 0.3s ease;
     margin-top: 1.5rem;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.5rem;
 }
 
-.profile-actions .own-total-likes{
-    font-size: 15px;
-    color: rgb(10, 86, 42);
-    font-weight: bold;
-    margin-top: 2rem;
-    margin-left: 30rem;
-}
 
-.profile-actions .total-likes{
-    font-size: 15px;
-    color: rgb(10, 86, 42);
-    font-weight: bold;
-    margin-top: 2rem;
-    margin-left: 33rem;
-}
+
+
+
 
 
 
@@ -433,6 +434,10 @@ button {
     padding-bottom: 2rem;
     transform: translateY(35px);
     margin-bottom: 50px;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
 }
 
 
@@ -441,12 +446,7 @@ button {
     box-shadow: 0 5px 15px rgba(229, 131, 45, 0.753);
 }
 
-.recipe-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    position: relative;
-}
+
 
 
 
@@ -771,6 +771,18 @@ ul li {
 }
 
 .edit-icon:hover {
+    background: #ffffff;
+    color: #e5832d;
+}
+.bookmark-icon {
+    color: rgba(0, 0, 0, 0.64);
+    font-size: 15px;
+    margin-left: 20px;
+    margin-top: 11px;
+    text-decoration: none;
+}
+
+.bookmark-icon:hover {
     background: #ffffff;
     color: #e5832d;
 }
@@ -1663,3 +1675,288 @@ textarea:focus {
     color: #666;
     margin-top: 20px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* BOOKMARKED RECIEPIE*/
+/* ===== Saved Recipes Page ===== */
+
+.saved-container {
+    padding: 40px 60px;
+}
+
+.saved-title-container {
+    width: 1100px;
+    margin: 0 auto;             /* center horizontally */
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+}
+.saved-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #222;
+    text-align: center;
+}
+
+/* Grid Layout */
+.saved-grid-container {
+    width: 1100px;
+    margin: 0 auto;             /* center horizontally */
+    padding: 20px 0px;
+    border-radius: 18px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+    
+}
+.saved-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 25px;
+    width: 1100px; 
+}
+
+/* Recipe Card */
+.saved-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.saved-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.saved-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.saved-card-content {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.saved-card h4 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.saved-card p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+/* View Button */
+.saved-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #CA6D1C;   /* Use your brand color */
+    color: white;
+    font-size: 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.3s ease;
+    align-self: flex-end;
+}
+
+.saved-btn:hover {
+    background: #e5832d;
+}
+
+/* Empty State */
+.empty-saved {
+    text-align: center;
+    padding: 60px 0;
+    color: #777;
+    font-size: 16px;
+}
+
+
+
+
+
+
+
+
+
+
+/* ===== Main Layout ===== */
+
+/* Layout */
+.generate-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    padding: 40px 60px;
+}
+
+/* Form Box */
+.generate-form-box {
+    background: #fff;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    width: 550px;
+}
+
+.generate-form-box h2 {
+    text-align: center;
+    color: #CA6D1C;
+    margin-bottom: 25px;
+}
+
+/* Form */
+.generate-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.generate-form input,
+.generate-form textarea {
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+}
+
+.generate-form textarea {
+    min-height: 120px;
+}
+
+.generate-form input:focus,
+.generate-form textarea:focus {
+    outline: none;
+    border-color: #e5832d;
+}
+
+.generate-form .btn {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #CA6D1C;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+.generate-form .btn:hover {
+    background: #e5832d;
+}
+
+/* RESULT BOX (hidden initially) */
+.generate-result-box {
+    display: none;
+    background: #fff;
+    padding: 50px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    width: 800px;
+    max-width: 95%;
+}
+
+/* Recipe content */
+.recipe-card-gen {
+    line-height: 1.7;
+    font-size: 15px;
+    color: #333;
+}
+
+.recipe-card-gen h1,
+.recipe-card-gen h2,
+.recipe-card-gen h3 {
+    color: #CA6D1C;
+}
+
+/* Back Button */
+.back-btn {
+    margin-top: 30px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #CA6D1C;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #e5832d;
+}
+
+
+/* Title (first strong inside first paragraph) */
+.recipe-card-gen p:first-child {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: #CA6D1C;
+    margin-bottom: 20px;
+}
+
+/* Section Headings */
+.recipe-card-gen h3 {
+    margin-top: 30px;
+    font-size: 20px;
+    color: #CA6D1C;
+    border-left: 5px solid #CA6D1C;
+    padding-left: 10px;
+}
+
+/* Ingredients list */
+.recipe-card-gen ul {
+    background: #f9f9f9;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.recipe-card-gen ul li {
+    margin-bottom: 8px;
+}
+
+/* Steps list */
+.recipe-card-gen ol {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.recipe-card-gen ol li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+/* Nutrition section special highlight */
+.recipe-card-gen h3:contains("Nutrition") {
+    color: #d35400;
+}
+
+/* Divider line styling */
+.recipe-card-gen hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, #CA6D1C, transparent);
+    margin: 20px 0;
+}
+

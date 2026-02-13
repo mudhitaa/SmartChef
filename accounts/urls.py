@@ -47,6 +47,10 @@ urlpatterns = [
     path('notifications/mark-read/', views.mark_notifications_read, name='mark_notifications_read'),
     path('notifications/', views.notifications_view, name='notifications'),
 
+    path('recipe/<int:recipe_id>/save/', views.toggle_save_recipe, name='toggle_save_recipe'),
+    path('saved-recipes/', views.saved_recipes, name='saved_recipes'),
+
+
 
 
 

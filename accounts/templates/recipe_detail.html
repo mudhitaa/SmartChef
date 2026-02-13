@@ -89,6 +89,16 @@
                     <i class="fa-solid fa-pen-to-square"></i>
                 </a>
             {% endif %}
+            {% if recipe.user != request.user %}
+            <a href="{% url 'toggle_save_recipe' recipe.id %}" class="bookmark-icon" title="Bookmark Recipe">
+                {% if recipe in request.user.profile.saved_recipes.all %}
+                    <i class="fa-solid fa-bookmark"></i>
+                {% else %}
+                    <i class="fa-regular fa-bookmark"></i>
+                {% endif %}
+            </a>
+            {% endif %}
+
  
             <div class="delete-actions">
             {% if user == recipe.user %}

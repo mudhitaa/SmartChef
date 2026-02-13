@@ -16,6 +16,12 @@ class Profile(models.Model):
     blank=True,
     null=True,
     )
+    saved_recipes = models.ManyToManyField(
+    "Recipe",
+    related_name="saved_by",
+    blank=True
+    )
+
 
     def __str__(self):
         return self.user.username

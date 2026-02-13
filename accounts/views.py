@@ -596,6 +596,28 @@ def notifications_view(request):
     return render(request, "notifications.html", {
         "notifications": notifications,
     })
+    
+
+@login_required
+def toggle_save_recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    profile = request.user.profile
+
+    if recipe in profile.saved_recipes.all():
+        profile.saved_recipes.remove(recipe)
+    else:
+        profile.saved_recipes.add(recipe)
+
+    return redirect(request.META.get('HTTP_REFERER', 'dashboard_home'))
+
+@login_required
+def saved_recipes(request):
+    profile = request.user.profile
+    recipes = profile.saved_recipes.all()
+
+    return render(request, "saved_recipes.html", {
+        "recipes": recipes
+    })
 
 @login_required
 @csrf_exempt

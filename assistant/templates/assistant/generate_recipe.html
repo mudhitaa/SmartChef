@@ -2,55 +2,78 @@
 {% block title %}Generate Recipe | SmartChef{% endblock %}
 
 {% block content %}
-<section class="upload-section">
-    <h2>Generate Recipe with SmartChef AI</h2>
 
-    <form id="recipeForm" method="POST" class="upload-form">
-        {% csrf_token %}
+<section class="generate-wrapper">
 
-        <input type="text" name="recipe_name" placeholder="Recipe Name (optional)">
+    <!-- FORM -->
+    <div id="generate-form-box" class="generate-form-box">
+        <h2>Generate Recipe with SmartChef AI</h2>
 
-        <textarea name="ingredients" placeholder="Enter ingredients (comma separated)" ></textarea>
+        <form id="recipeForm" class="generate-form">
+            {% csrf_token %}
 
-        <input type="number" name="servings" placeholder="Servings (e.g., 2)" required>
+            <input type="text" name="recipe_name" placeholder="Recipe Name (optional)">
+            <textarea name="ingredients" placeholder="Enter ingredients (comma separated)"></textarea>
+            <input type="number" name="servings" placeholder="Servings (e.g., 2)" required>
+            <input type="text" name="time_required" placeholder="Time Required (e.g., 30 minutes)" required>
+            <input type="text" name="allergies" placeholder="Allergies to avoid (optional)">
 
-        <input type="text" name="time_required" placeholder="Time Required (e.g., 30 minutes)" required>
+            <button type="submit" class="btn">Generate Recipe</button>
+        </form>
+    </div>
 
-        <input type="text" name="allergies" placeholder="Allergies to avoid (optional)">
-
-        <button type="submit">Generate Recipe</button>
-    </form>
-
-    <div id="ai-result" class="ai-output" style="display:none; margin-top: 20px;">
+    <!-- RESULT -->
+    <div id="generate-result-box" class="generate-result-box">
         <h3>SmartChef AI Result</h3>
-        <div id="recipe-response"></div>
+
+        <div id="recipe-response" class="recipe-card-gen"></div>
+
+        <button id="backToForm" class="back-btn">
+            Generate Another Recipe
+        </button>
     </div>
 
 </section>
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <script>
-    document.getElementById("recipeForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
+document.getElementById("recipeForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-        const formData = {
-            recipe_name: this.recipe_name.value,
-            ingredients: this.ingredients.value,
-            servings: this.servings.value,
-            time_required: this.time_required.value,
-            allergies: this.allergies.value,
-        };
+    const formData = {
+        recipe_name: this.recipe_name.value,
+        ingredients: this.ingredients.value,
+        servings: this.servings.value,
+        time_required: this.time_required.value,
+        allergies: this.allergies.value,
+    };
 
-        const response = await fetch("/assistant/generate-recipe/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-        });
-
-        const data = await response.json();
-        document.getElementById("ai-result").style.display = "block";
-        document.getElementById("recipe-response").innerHTML = marked.parse(data.answer || data.error);
+    const response = await fetch("/assistant/generate-recipe/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
     });
 
+    const data = await response.json();
+
+    document.getElementById("generate-form-box").style.display = "none";
+    document.getElementById("generate-result-box").style.display = "block";
+
+    document.getElementById("recipe-response").innerHTML =
+        marked.parse(data.answer || data.error);
+});
+
+/* Back button */
+document.getElementById("backToForm").addEventListener("click", function () {
+    document.getElementById("generate-result-box").style.display = "none";
+    document.getElementById("generate-form-box").style.display = "block";
+    document.getElementById("recipe-response").innerHTML = "";
+});
+
+
 </script>
+
 {% endblock %}
