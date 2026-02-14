@@ -1801,11 +1801,11 @@ textarea:focus {
 
 /* Layout */
 .generate-wrapper {
+    min-height: auto;
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 70vh;
-    padding: 40px 60px;
+    align-items: flex-start;
+    padding-top: 35px;
 }
 
 /* Form Box */
@@ -1814,7 +1814,14 @@ textarea:focus {
     padding: 40px;
     border-radius: 18px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    width: 550px;
+    width: 600px;
+    position: relative;
+    max-width: 95%;
+    transition: all 0.6s ease;
+}
+
+.generate-form-box.hide {
+    display: none;
 }
 
 .generate-form-box h2 {
@@ -1864,99 +1871,137 @@ textarea:focus {
     background: #e5832d;
 }
 
-/* RESULT BOX (hidden initially) */
+/* RESULT CONTAINER */
 .generate-result-box {
     display: none;
-    background: #fff;
-    padding: 50px;
-    border-radius: 18px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    width: 800px;
+    transition: all 0.6s ease;
+    width: 900px;
     max-width: 95%;
+    position: relative;
+    max-height: none;
 }
 
-/* Recipe content */
+/* When visible */
+.generate-result-box.active {
+    display: block;
+}
+
+/* Header */
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+/* Recipe Card */
 .recipe-card-gen {
-    line-height: 1.7;
-    font-size: 15px;
-    color: #333;
+    background: #ffffff;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    line-height: 1.8;
+    font-size: 16px;
+    animation: fadeInContent 0.8s ease;
+    max-height: none;      /* removed height limit */
+    overflow: visible;     /* removed scroll */
+    padding-right: 15px;
 }
 
-.recipe-card-gen h1,
-.recipe-card-gen h2,
-.recipe-card-gen h3 {
-    color: #CA6D1C;
+/* Smooth fade content */
+@keyframes fadeInContent {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-/* Back Button */
-.back-btn {
-    margin-top: 30px;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    background-color: #CA6D1C;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.back-btn:hover {
-    background-color: #e5832d;
-}
-
-
-/* Title (first strong inside first paragraph) */
+/* Main Title */
 .recipe-card-gen p:first-child {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
     text-align: center;
     color: #CA6D1C;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
-/* Section Headings */
+/* Section Titles */
 .recipe-card-gen h3 {
-    margin-top: 30px;
+    margin-top: 35px;
+    margin-bottom: 15px;
     font-size: 20px;
-    color: #CA6D1C;
-    border-left: 5px solid #CA6D1C;
-    padding-left: 10px;
+    font-weight: 600;
+    color: #333;
+    position: relative;
 }
 
-/* Ingredients list */
+.recipe-card-gen h3::after {
+    content: "";
+    width: 50px;
+    height: 3px;
+    background: #CA6D1C;
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+}
+
+/* Ingredients Box */
 .recipe-card-gen ul {
-    background: #f9f9f9;
-    padding: 15px 20px;
-    border-radius: 10px;
+    background: #f8f8f8;
+    padding: 20px 25px;
+    border-radius: 12px;
     margin-top: 10px;
 }
 
-.recipe-card-gen ul li {
-    margin-bottom: 8px;
-}
-
-/* Steps list */
+/* Steps */
 .recipe-card-gen ol {
-    margin-top: 10px;
+    margin-top: 15px;
     padding-left: 20px;
 }
 
 .recipe-card-gen ol li {
-    margin-bottom: 10px;
-    line-height: 1.6;
+    margin-bottom: 12px;
 }
 
-/* Nutrition section special highlight */
-.recipe-card-gen h3:contains("Nutrition") {
-    color: #d35400;
+/* Nutrition Section */
+.recipe-card-gen h3:nth-of-type(4) + ul {
+    background: #fff5eb;
+    border-left: 4px solid #CA6D1C;
 }
 
-/* Divider line styling */
-.recipe-card-gen hr {
+/* Back Button */
+.back-btn {
+    padding: 10px 18px;
+    border-radius: 8px;
     border: none;
-    height: 2px;
-    background: linear-gradient(to right, #CA6D1C, transparent);
-    margin: 20px 0;
+    background: #CA6D1C;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
 }
+
+.back-btn:hover {
+    background: #e5832d;
+}
+
+/* Toggle Button */
+.toggle-btn-ai {
+    margin-top: 10px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #2c7a7b;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.toggle-btn-ai:hover {
+    background: #245f60;
+}
+
+
+
+
+
 

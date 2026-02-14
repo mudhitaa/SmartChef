@@ -16,7 +16,6 @@ def recipe_generator_page(request):
 def ai_chat(request):
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
-
     try:
         data = json.loads(request.body)
         question = data.get("question", "").strip()
@@ -32,57 +31,71 @@ def ai_chat(request):
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
 
-
 @csrf_exempt
 def generate_recipe(request):
     if request.method != "POST":
         return JsonResponse({"error": "POST required"}, status=400)
-
+    
     data = json.loads(request.body)
-
     recipe_name = data.get("recipe_name", "")
     ingredients = data.get("ingredients", "")
     servings = data.get("servings", "")
     time_required = data.get("time_required", "")
     allergies = data.get("allergies", "")
+    extra_requests = data.get("extra_requests", "")
 
     prompt = f"""
-Create a fully structured recipe.
+        You are a professional chef and certified nutritionist.
+        Create an EXTREMELY detailed, restaurant-quality, professionally formatted recipe.
+        User Requirements:
+        - Recipe Name: {recipe_name}
+        - Ingredients Available: {ingredients}
+        - Servings: {servings}
+        - Time Required: {time_required}
+        - Allergies to avoid: {allergies}
+        - Additional Requests: {extra_requests}
 
-Recipe Name: {recipe_name}
-Ingredients: {ingredients}
-Servings: {servings}
-Time Required: {time_required}
-Allergies to avoid: {allergies}
+        Instructions:
+        - Be highly detailed.
+        - Include exact measurements in grams and cups.
+        - Include cooking temperature.
+        - Include pro tips.
+        - Ensure nutrition section is realistic.
+        - If user has additional requests alter the recipe accordingly.
+        - Include macro breakdown clearly.
 
-Format the output EXACTLY like this:
+        Format EXACTLY like this:
+        **Recipe Title**
 
-🍽️ **Recipe Title**
+        ---
 
----
+        ### 📝 Ingredients
+        - item (grams + cups)
 
-### 📝 Ingredients
-- list items
+        ### Time required
+        -list the timing details into prep time, cooktime and total time in accordance to the time required.
 
-### 👩‍🍳 Steps
-1. step one
-2. step two
-3. step three
+        ### 👩‍🍳 Detailed Cooking Steps
+        1. Step with temperature and technique explanation.
+        2. Include timing, texture cues, and professional tips.
 
-### ⚠️ Allergy Warnings
-- bullet list based on ingredients + allergies
+        ### 💡 Chef Tips
+        - Professional improvements
 
-### 🔥 Nutrition (per serving)
-- Calories:
-- Protein:
-- Carbs:
-- Fat:
+        ### ⚠️ Allergy Warnings
+        - Bullet list
 
-### ⭐ Suggestions
-- Healthy alternatives
-- Flavor improvements
-- Side dish ideas
-"""
+        ### 🔥 Nutrition (Per Serving)
+        - Calories:
+        - Protein:
+        - Carbohydrates:
+        - Fat:
+        - Fiber:
+
+        ### 🥗 Customization Based on User Request
+        - Explain how extra requests were fulfilled.
+        -if there were no extra requests acknowledge that.
+    """
 
     answer, _ = answer_question(prompt)
     return JsonResponse({"answer": answer})

@@ -16,30 +16,37 @@
             <textarea name="ingredients" placeholder="Enter ingredients (comma separated)"></textarea>
             <input type="number" name="servings" placeholder="Servings (e.g., 2)" required>
             <input type="text" name="time_required" placeholder="Time Required (e.g., 30 minutes)" required>
-            <input type="text" name="allergies" placeholder="Allergies to avoid (optional)">
+            <input type="text" name="allergies" placeholder="Allergies specifications (optional)">
+            <textarea name="extra_requests" placeholder="Example:low carb, spicy, keto-friendly, etc."></textarea>
 
             <button type="submit" class="btn">Generate Recipe</button>
+
+            <!-- NEW Toggle Button --> 
+             <button type="button" id="viewResultBtn" class="toggle-btn-ai" style="display:none;"> 
+                View Generated Recipe → 
+            </button>
         </form>
     </div>
 
     <!-- RESULT -->
     <div id="generate-result-box" class="generate-result-box">
-        <h3>SmartChef AI Result</h3>
-
         <div id="recipe-response" class="recipe-card-gen"></div>
-
-        <button id="backToForm" class="back-btn">
-            Generate Another Recipe
-        </button>
+        <div class="result-header"> 
+            <button id="backToForm" class="toggle-btn-ai"> 
+                ← Back to Form 
+            </button> 
+        </div>
     </div>
 
 </section>
 
-
-
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <script>
+const formBox = document.getElementById("generate-form-box");
+const resultBox = document.getElementById("generate-result-box");
+const viewBtn = document.getElementById("viewResultBtn");
+
 document.getElementById("recipeForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
@@ -49,6 +56,7 @@ document.getElementById("recipeForm").addEventListener("submit", async function 
         servings: this.servings.value,
         time_required: this.time_required.value,
         allergies: this.allergies.value,
+        extra_requests: this.extra_requests.value
     };
 
     const response = await fetch("/assistant/generate-recipe/", {
@@ -57,23 +65,22 @@ document.getElementById("recipeForm").addEventListener("submit", async function 
         body: JSON.stringify(formData),
     });
 
-    const data = await response.json();
-
-    document.getElementById("generate-form-box").style.display = "none";
-    document.getElementById("generate-result-box").style.display = "block";
-
-    document.getElementById("recipe-response").innerHTML =
-        marked.parse(data.answer || data.error);
-});
-
-/* Back button */
-document.getElementById("backToForm").addEventListener("click", function () {
-    document.getElementById("generate-result-box").style.display = "none";
-    document.getElementById("generate-form-box").style.display = "block";
-    document.getElementById("recipe-response").innerHTML = "";
-});
-
-
-</script>
-
+    const data = await response.json(); 
+    document.getElementById("recipe-response").innerHTML = marked.parse(data.answer || data.error); 
+    // Show result box 
+    formBox.classList.add("hide");
+     resultBox.classList.add("active"); 
+     // Show toggle button 
+     viewBtn.style.display = "block"; }); 
+     /* View Result Button */ 
+     document.getElementById("viewResultBtn").addEventListener("click", function () { 
+        document.getElementById("generate-form-box").classList.add("hide"); 
+        document.getElementById("generate-result-box").classList.add("active"); 
+    }); 
+    /* Back Button */ 
+    document.getElementById("backToForm").addEventListener("click", function () { 
+        document.getElementById("generate-result-box").classList.remove("active"); 
+        document.getElementById("generate-form-box").classList.remove("hide"); 
+    }); 
+</script> 
 {% endblock %}
