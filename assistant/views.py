@@ -64,37 +64,64 @@ def generate_recipe(request):
         - If user has additional requests alter the recipe accordingly.
         - Include macro breakdown clearly.
 
-        Format EXACTLY like this:
-        **Recipe Title**
+        Format STRICTLY in clean HTML. 
+        Return ONLY valid HTML. 
+        Do NOT return markdown.
 
-        ---
+        Use this exact structure:
 
-        ### 📝 Ingredients
-        - item (grams + cups)
+        <h2 class="recipe-title">Recipe Title</h2>
 
-        ### Time required
-        -list the timing details into prep time, cooktime and total time in accordance to the time required.
+        <div class="recipe-meta">
+        <p><strong>Servings:</strong> X</p>
+        <p><strong>Prep Time:</strong> X</p>
+        <p><strong>Cook Time:</strong> X</p>
+        </div>
 
-        ### 👩‍🍳 Detailed Cooking Steps
-        1. Step with temperature and technique explanation.
-        2. Include timing, texture cues, and professional tips.
+        <section class="recipe-section ingredients">
+        <h3>Ingredients</h3>
+        <ul>
+            <li>Ingredient (grams + cups)</li>
+        </ul>
+        </section>
 
-        ### 💡 Chef Tips
-        - Professional improvements
+        <section class="recipe-section steps">
+        <h3>Instructions</h3>
+        <ol>
+            <li>Step with full professional explanation.</li>
+        </ol>
+        </section>
 
-        ### ⚠️ Allergy Warnings
-        - Bullet list
+        <section class="recipe-section tips">
+        <h3>Culinary Notes</h3>
+        <ul>
+            <li>Tip</li>
+        </ul>
+        </section>
 
-        ### 🔥 Nutrition (Per Serving)
-        - Calories:
-        - Protein:
-        - Carbohydrates:
-        - Fat:
-        - Fiber:
+        <section class="recipe-section allergy">
+        <h3>Allergy Warnings</h3>
+        <ul>
+            <li>Warning</li>
+        </ul>
+        </section>
 
-        ### 🥗 Customization Based on User Request
-        - Explain how extra requests were fulfilled.
-        -if there were no extra requests acknowledge that.
+        <section class="recipe-section nutrition">
+        <h3>Nutrition (Per Serving)</h3>
+        <ul>
+            <li>Calories:</li>
+            <li>Protein:</li>
+            <li>Carbohydrates:</li>
+            <li>Fat:</li>
+            <li>Fiber:</li>
+        </ul>
+        </section>
+
+        <section class="recipe-section customization">
+        <h3>Customization</h3>
+        <p>Explanation of adjustments made.</p>
+        </section>
+
     """
 
     answer, _ = answer_question(prompt)

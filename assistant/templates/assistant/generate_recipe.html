@@ -17,7 +17,7 @@
             <input type="number" name="servings" placeholder="Servings (e.g., 2)" required>
             <input type="text" name="time_required" placeholder="Time Required (e.g., 30 minutes)" required>
             <input type="text" name="allergies" placeholder="Allergies specifications (optional)">
-            <textarea name="extra_requests" placeholder="Example:low carb, spicy, keto-friendly, etc."></textarea>
+            <input type="text" name="extra_requests" placeholder="Example:low carb, spicy, keto-friendly, etc.">
 
             <button type="submit" class="btn">Generate Recipe</button>
 
@@ -40,12 +40,12 @@
 
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <script>
 const formBox = document.getElementById("generate-form-box");
 const resultBox = document.getElementById("generate-result-box");
 const viewBtn = document.getElementById("viewResultBtn");
+const recipeResponse = document.getElementById("recipe-response");
 
 document.getElementById("recipeForm").addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -59,28 +59,40 @@ document.getElementById("recipeForm").addEventListener("submit", async function 
         extra_requests: this.extra_requests.value
     };
 
-    const response = await fetch("/assistant/generate-recipe/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-    });
+    try {
+        const response = await fetch("/assistant/generate-recipe/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        });
 
-    const data = await response.json(); 
-    document.getElementById("recipe-response").innerHTML = marked.parse(data.answer || data.error); 
-    // Show result box 
+        const data = await response.json();
+
+        if (data.answer) {
+            recipeResponse.innerHTML = data.answer;  // Direct HTML render
+            formBox.classList.add("hide");
+            resultBox.classList.add("active");
+            viewBtn.style.display = "block";
+        } else {
+            recipeResponse.innerHTML = `<p style="color:red;">${data.error}</p>`;
+        }
+
+    } catch (error) {
+        recipeResponse.innerHTML = `<p style="color:red;">Something went wrong.</p>`;
+    }
+});
+
+/* View Result Button */
+viewBtn.addEventListener("click", function () {
     formBox.classList.add("hide");
-     resultBox.classList.add("active"); 
-     // Show toggle button 
-     viewBtn.style.display = "block"; }); 
-     /* View Result Button */ 
-     document.getElementById("viewResultBtn").addEventListener("click", function () { 
-        document.getElementById("generate-form-box").classList.add("hide"); 
-        document.getElementById("generate-result-box").classList.add("active"); 
-    }); 
-    /* Back Button */ 
-    document.getElementById("backToForm").addEventListener("click", function () { 
-        document.getElementById("generate-result-box").classList.remove("active"); 
-        document.getElementById("generate-form-box").classList.remove("hide"); 
-    }); 
-</script> 
+    resultBox.classList.add("active");
+});
+
+/* Back Button */
+document.getElementById("backToForm").addEventListener("click", function () {
+    resultBox.classList.remove("active");
+    formBox.classList.remove("hide");
+});
+</script>
+
 {% endblock %}
