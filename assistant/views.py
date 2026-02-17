@@ -45,84 +45,92 @@ def generate_recipe(request):
     extra_requests = data.get("extra_requests", "")
 
     prompt = f"""
-        You are a professional chef and certified nutritionist.
-        Create an EXTREMELY detailed, restaurant-quality, professionally formatted recipe.
-        User Requirements:
-        - Recipe Name: {recipe_name}
-        - Ingredients Available: {ingredients}
-        - Servings: {servings}
-        - Time Required: {time_required}
-        - Allergies to avoid: {allergies}
-        - Additional Requests: {extra_requests}
+            You are a professional chef and certified nutritionist.
+            Create an EXTREMELY detailed, restaurant-quality, professionally formatted recipe.
 
-        Instructions:
-        - Be highly detailed.
-        - Include exact measurements in grams and cups.
-        - Include cooking temperature.
-        - Include pro tips.
-        - Ensure nutrition section is realistic.
-        - If user has additional requests alter the recipe accordingly.
-        - Include macro breakdown clearly.
+            IMPORTANT VALIDATION RULE:
+            - If the ingredient list contains fake, unknown, non-food, or nonsensical items,
+            you MUST NOT generate a recipe.
+            - In that case, return ONLY the following HTML exactly:
+            <h2 class="recipe-title">Invalid ingredients provided. Please enter real, edible food ingredients.</h2>
+            - Do NOT generate any other content.
+            
+            User Requirements:
+            - Recipe Name: {recipe_name}
+            - Ingredients Available: {ingredients}
+            - Servings: {servings}
+            - Time Required: {time_required}
+            - Allergies to avoid: {allergies}
+            - Additional Requests: {extra_requests}
 
-        Format STRICTLY in clean HTML. 
-        Return ONLY valid HTML. 
-        Do NOT return markdown.
+            Instructions:
+            - Be highly detailed.
+            - Include exact measurements in grams and cups.
+            - Include cooking temperature.
+            - Include pro tips.
+            - Ensure nutrition section is realistic.
+            - If user has additional requests alter the recipe accordingly.
+            - Include macro breakdown clearly.
+            
+            Format STRICTLY in clean HTML. 
+            Return ONLY valid HTML. 
+            Do NOT return markdown.
 
-        Use this exact structure:
+            Use this exact structure if the ingredients are valid :
 
-        <h2 class="recipe-title">Recipe Title</h2>
+            <h2 class="recipe-title">Recipe Title</h2>
 
-        <div class="recipe-meta">
-        <p><strong>Servings:</strong> X</p>
-        <p><strong>Prep Time:</strong> X</p>
-        <p><strong>Cook Time:</strong> X</p>
-        </div>
+            <div class="recipe-meta">
+            <p><strong>Servings:</strong> X</p>
+            <p><strong>Prep Time:</strong> X</p>
+            <p><strong>Cook Time:</strong> X</p>
+            </div>
 
-        <section class="recipe-section ingredients">
-        <h3>Ingredients</h3>
-        <ul>
-            <li>Ingredient (grams + cups)</li>
-        </ul>
-        </section>
+            <section class="recipe-section ingredients">
+            <h3>Ingredients</h3>
+            <ul>
+                <li>Ingredient (grams + cups)</li>
+            </ul>
+            </section>
 
-        <section class="recipe-section steps">
-        <h3>Instructions</h3>
-        <ol>
-            <li>Step with full professional explanation.</li>
-        </ol>
-        </section>
+            <section class="recipe-section steps">
+            <h3>Instructions</h3>
+            <ol>
+                <li>Step with full professional explanation.</li>
+            </ol>
+            </section>
 
-        <section class="recipe-section tips">
-        <h3>Culinary Notes</h3>
-        <ul>
-            <li>Tip</li>
-        </ul>
-        </section>
+            <section class="recipe-section tips">
+            <h3>Culinary Notes</h3>
+            <ul>
+                <li>Tip</li>
+            </ul>
+            </section>
 
-        <section class="recipe-section allergy">
-        <h3>Allergy Warnings</h3>
-        <ul>
-            <li>Warning</li>
-        </ul>
-        </section>
+            <section class="recipe-section allergy">
+            <h3>Allergy Warnings</h3>
+            <ul>
+                <li>Warning</li>
+            </ul>
+            </section>
 
-        <section class="recipe-section nutrition">
-        <h3>Nutrition (Per Serving)</h3>
-        <ul>
-            <li>Calories:</li>
-            <li>Protein:</li>
-            <li>Carbohydrates:</li>
-            <li>Fat:</li>
-            <li>Fiber:</li>
-        </ul>
-        </section>
+            <section class="recipe-section nutrition">
+            <h3>Nutrition (Per Serving)</h3>
+            <ul>
+                <li>Calories:</li>
+                <li>Protein:</li>
+                <li>Carbohydrates:</li>
+                <li>Fat:</li>
+                <li>Fiber:</li>
+            </ul>
+            </section>
 
-        <section class="recipe-section customization">
-        <h3>Customization</h3>
-        <p>Explanation of adjustments made.</p>
-        </section>
-
+            <section class="recipe-section customization">
+            <h3>Customization</h3>
+            <p>Explanation of adjustments made.</p>
+            </section>
     """
+
 
     answer, _ = answer_question(prompt)
     return JsonResponse({"answer": answer})
