@@ -603,7 +603,7 @@ def notifications_view(request):
 
 @login_required
 def notifications_preview(request):
-    notifications = request.user.notifications.all()[:5]
+    notifications = request.user.notifications.filter(is_read=False).order_by('-created_at')[:5]
 
     html = render_to_string(
         'accounts/partials/notification_preview.html',

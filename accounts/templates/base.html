@@ -30,7 +30,8 @@
         <a href="{% url 'dashboard_profile' request.user.username %}" title="Profile"><i class="fas fa-user"></i></a>
 
         <div class="notification-wrapper">
-            <a href="javascript:void(0);" class="notification-icon" id="notif-bell">
+            <a href="{% url 'notifications' %}" class="notification-icon" id="notif-bell">
+
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge" id="notif-count">
                     {{ unread_notifications_count }}
@@ -43,9 +44,6 @@
                     <p style="padding:10px;">Loading...</p>
                 </div>
 
-                <div class="view-all">
-                    <a href="{% url 'notifications' %}">View all notifications</a>
-                </div>
             </div>
         </div>
 
@@ -79,41 +77,37 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    const bell = document.getElementById("notif-bell");
-    const wrapper = document.querySelector(".notification-wrapper");
-    const dropdown = document.getElementById("notif-dropdown");
     const preview = document.getElementById("notif-preview");
     const count = document.getElementById("notif-count");
 
-    bell.addEventListener("click", function (e) {
-        e.stopPropagation();
-        wrapper.classList.toggle("active");
-
-        if (wrapper.classList.contains("active")) {
-            fetch("{% url 'notifications_preview' %}")
-                .then(response => response.json())
-                .then(data => {
-                    preview.innerHTML = data.html;
-                    count.textContent = data.unread_count;
-                })
-                .catch(error => console.error("Error:", error));
-        }
-    });
-
-    document.addEventListener("click", function () {
-        wrapper.classList.remove("active");
-    });
-
-    // Auto refresh count every 15 seconds
-    setInterval(() => {
+    function loadNotifications() {
         fetch("{% url 'notifications_preview' %}")
             .then(response => response.json())
             .then(data => {
-                count.textContent = data.unread_count;
-            });
-    }, 15000);
+
+                // Update dropdown content (unread only)
+                preview.innerHTML = data.html;
+
+                // Update badge
+                if (data.unread_count > 0) {
+                    count.style.display = "inline-block";
+                    count.textContent = data.unread_count;
+                } else {
+                    count.style.display = "none";
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+    // Load once when page loads
+    loadNotifications();
+
+    // Auto refresh every 15 seconds
+    setInterval(loadNotifications, 15000);
+
 });
 </script>
+
 
 
 
