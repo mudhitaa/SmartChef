@@ -14,6 +14,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Count
+from django.template.loader import render_to_string
+
 
 
 
@@ -597,6 +599,25 @@ def notifications_view(request):
         "notifications": notifications,
     })
     
+
+
+@login_required
+def notifications_preview(request):
+    notifications = request.user.notifications.all()[:5]
+
+    html = render_to_string(
+        'accounts/partials/notification_preview.html',
+        {'notifications': notifications},
+        request=request
+    )
+
+    unread_count = request.user.notifications.filter(is_read=False).count()
+
+    return JsonResponse({
+        'html': html,
+        'unread_count': unread_count
+    })
+
 
 @login_required
 def toggle_save_recipe(request, recipe_id):

@@ -28,12 +28,27 @@
     <nav class="nav-links">
         <a href="{% url 'dashboard_home' %}" title="Home"><i class="fas fa-home"></i></a>
         <a href="{% url 'dashboard_profile' request.user.username %}" title="Profile"><i class="fas fa-user"></i></a>
-        <a href="{% url 'notifications' %}" class="notification-icon">
-            <i class="fas fa-bell"></i>
-            {% if unread_notifications_count > 0 %}
-                <span class="notification-badge">{{ unread_notifications_count }}</span>
-            {% endif %}
-        </a>
+
+        <div class="notification-wrapper">
+            <a href="javascript:void(0);" class="notification-icon" id="notif-bell">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notif-count">
+                    {{ unread_notifications_count }}
+                </span>
+            </a>
+
+            <!-- Dropdown -->
+            <div class="notif-dropdown" id="notif-dropdown">
+                <div id="notif-preview">
+                    <p style="padding:10px;">Loading...</p>
+                </div>
+
+                <div class="view-all">
+                    <a href="{% url 'notifications' %}">View all notifications</a>
+                </div>
+            </div>
+        </div>
+
 
         <a href="{% url 'settings' %}" class="settings-icon" title="Settings"><i class="fas fa-cog"></i></a>
         <a href="/assistant/generate/" title="AI Recipe Maker">
@@ -62,50 +77,44 @@
 </main>
 
 <script>
-    // Auto-hide Django messages after 3 seconds
-    setTimeout(function () {
-        let messages = document.getElementById('msg-container');
-        if (messages) {
-            messages.style.transition = "opacity 0.5s ease";
-            messages.style.opacity = "0";
+document.addEventListener("DOMContentLoaded", function () {
 
-            // Remove permanently after fade-out
-            setTimeout(() => messages.remove(), 600);
-        }
-    }, 1200);
+    const bell = document.getElementById("notif-bell");
+    const wrapper = document.querySelector(".notification-wrapper");
+    const dropdown = document.getElementById("notif-dropdown");
+    const preview = document.getElementById("notif-preview");
+    const count = document.getElementById("notif-count");
 
-    document.addEventListener("DOMContentLoaded", () => {
-    const notifWrapper = document.querySelector('.notification-wrapper');
-    const notifCount = document.querySelector('.notif-count');
+    bell.addEventListener("click", function (e) {
+        e.stopPropagation();
+        wrapper.classList.toggle("active");
 
-    notifWrapper.addEventListener('mouseenter', () => {
-        // Only send request if there are unread notifications
-        if (notifCount && parseInt(notifCount.textContent) > 0) {
-            fetch("{% url 'mark_notifications_read' %}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',  // ensure CSRF token is included
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'ok') {
-                    // Set the count badge to 0 immediately
-                    notifCount.textContent = 0;
-
-                    // Optionally, remove the "unread" highlight
-                    document.querySelectorAll('.notif-item.unread').forEach(item => {
-                        item.classList.remove('unread');
-                    });
-                }
-            })
-            .catch(err => console.error('Error marking notifications read:', err));
+        if (wrapper.classList.contains("active")) {
+            fetch("{% url 'notifications_preview' %}")
+                .then(response => response.json())
+                .then(data => {
+                    preview.innerHTML = data.html;
+                    count.textContent = data.unread_count;
+                })
+                .catch(error => console.error("Error:", error));
         }
     });
-});
 
+    document.addEventListener("click", function () {
+        wrapper.classList.remove("active");
+    });
+
+    // Auto refresh count every 15 seconds
+    setInterval(() => {
+        fetch("{% url 'notifications_preview' %}")
+            .then(response => response.json())
+            .then(data => {
+                count.textContent = data.unread_count;
+            });
+    }, 15000);
+});
 </script>
+
 
 
 </body>

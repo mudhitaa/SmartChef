@@ -43,8 +43,7 @@ urlpatterns = [
     path('recipe/<int:recipe_id>/likes/', views.recipe_likes_list, name='recipe_likes_list'),
 
     
-
-    path('notifications/mark-read/', views.mark_notifications_read, name='mark_notifications_read'),
+    path('notifications/preview/', views.notifications_preview, name='notifications_preview'),
     path('notifications/', views.notifications_view, name='notifications'),
 
     path('recipe/<int:recipe_id>/save/', views.toggle_save_recipe, name='toggle_save_recipe'),

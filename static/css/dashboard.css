@@ -225,6 +225,73 @@ button {
     color: #666;
 }
 
+.notification-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.notif-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 35px;
+    width: 320px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.notification-wrapper.active .notif-dropdown {
+    display: block;
+}
+
+.notif-item {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+}
+
+.notif-item:hover {
+    background: #f7f7f7;
+}
+
+.notif-item.unread {
+    background: #eef3ff;
+    font-weight: 500;
+}
+
+.notif-item img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.notif-text {
+    font-size: 0.85rem;
+}
+
+.notif-time {
+    font-size: 0.7rem;
+    color: #777;
+}
+
+.view-all {
+    text-align: center;
+    padding: 8px;
+    background: #fafafa;
+}
+
+.view-all a {
+    text-decoration: none;
+    color: #e5832d;
+    font-weight: 500;
+}
+
 
 
 

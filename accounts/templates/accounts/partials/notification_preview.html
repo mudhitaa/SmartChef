@@ -1,0 +1,26 @@
+{% load static %}
+{% load humanize %}
+
+{% if notifications %}
+    {% for notification in notifications %}
+        <div class="notif-item {% if not notification.is_read %}unread{% endif %}">
+            
+            {% if notification.from_user.profile.profile_image %}
+                <img src="{{ notification.from_user.profile.profile_image.url }}">
+            {% else %}
+                <img src="{% static 'images/default.jpg' %}">
+            {% endif %}
+
+            <div class="notif-text">
+                <a href="{{ notification.link }}">
+                    {{ notification.text|truncatechars:60 }}
+                </a>
+                <div class="notif-time">
+                    {{ notification.created_at|naturaltime }}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p style="padding:10px;">No notifications</p>
+{% endif %}
