@@ -29,11 +29,11 @@
         <a href="{% url 'dashboard_home' %}" title="Home"><i class="fas fa-home"></i></a>
         <a href="{% url 'dashboard_profile' request.user.username %}" title="Profile"><i class="fas fa-user"></i></a>
 
-        <div class="notification-wrapper">
+        <div class="notification-wrapper {% if request.path == '/notifications/' %}no-dropdown{% endif %}">
             <a href="{% url 'notifications' %}" class="notification-icon" id="notif-bell">
 
                 <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notif-count">
+                <span class="notification-badge" id="notif-count" style="display:none;">
                     {{ unread_notifications_count }}
                 </span>
             </a>
@@ -48,10 +48,10 @@
         </div>
 
 
-        <a href="{% url 'settings' %}" class="settings-icon" title="Settings"><i class="fas fa-cog"></i></a>
         <a href="/assistant/generate/" title="AI Recipe Maker">
-                <i class="fas fa-utensils"></i>
-            </a>
+            <i class="fas fa-utensils"></i>
+        </a>
+        <a href="{% url 'settings' %}" class="settings-icon" title="Settings"><i class="fas fa-cog"></i></a>
     </nav>
 
 
@@ -88,13 +88,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Update dropdown content (unread only)
                 preview.innerHTML = data.html;
 
-                // Update badge
-                if (data.unread_count > 0) {
-                    count.style.display = "inline-block";
-                    count.textContent = data.unread_count;
-                } else {
-                    count.style.display = "none";
-                }
+        if (data.unread_count > 0) {
+            count.style.display = "inline-block";
+            count.textContent = data.unread_count;
+        } else {
+            count.style.display = "none";
+        }
+
+                
             })
             .catch(error => console.error("Error:", error));
     }

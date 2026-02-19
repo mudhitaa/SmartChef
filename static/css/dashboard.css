@@ -134,7 +134,7 @@ button {
 
 .nav-links a i {
     font-size: 1.5rem;
-    margin-right: 40px;
+    margin-right:40px;
     color: rgb(38, 35, 35);
     transition: color 0.3s;
 }
@@ -147,7 +147,6 @@ button {
 .nav-links a.settings-icon i {
     font-size: 1.7rem;
     transition: transform 0.3s ease, color 0.3s ease;
-    margin-left: -5px; /* shift slightly to the left */
 }
 
 .nav-links a.settings-icon:hover i {
@@ -164,31 +163,22 @@ button {
 
 .notification-icon {
     position: relative;
+    margin-right: -22px;
 }
 
 .notification-badge {
     position: absolute;
     top: -6px;
-    right: -6px;
-    background-color: red;
+    right: 32px;
+    background-color: rgb(189, 1, 1);
     color: white;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     font-weight: bold;
     padding: 2px 5px;
     border-radius: 50%;
+    display: none;
 }
 
-
-.notif-count {
-    position: absolute;
-    top: -5px;
-    right: -8px;
-    background: red;
-    color: #fff;
-    font-size: 0.7rem;
-    padding: 2px 5px;
-    border-radius: 50%;
-}
 
 .notif-dropdown {
     display: none;
@@ -207,6 +197,14 @@ button {
 .notification-wrapper:hover .notif-dropdown {
     display: block;
 }
+.notification-wrapper.no-dropdown .notif-dropdown {
+    display: none !important;
+}
+
+.notification-wrapper.no-dropdown:hover .notif-dropdown {
+    display: none !important;
+}
+
 
 .notif-item {
     padding: 0.5rem;
