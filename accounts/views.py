@@ -222,7 +222,7 @@ def edit_recipe(request, recipe_id):
             recipe.video = video
 
         recipe.save()
-        messages.success(request, "Recipe updated successfully.")
+        messages.success(request, "Recipe edited successfully.")
         return redirect("recipe_detail", recipe_id=recipe.id)
 
     return render(request, "edit_recipe.html", {"recipe": recipe})
@@ -281,8 +281,10 @@ def recipe_detail(request, recipe_id):
                     user=recipe.user,
                     from_user=request.user,
                     notif_type='comment',
+                    recipe=recipe,
                     text=f"{request.user.username} commented on your recipe '{recipe.title}'."
                 )
+
     return render(request, 'recipe_detail.html', {'recipe': recipe})
 
     
@@ -301,8 +303,10 @@ def like_recipe(request, recipe_id):
                 user=recipe.user,
                 from_user=request.user,
                 notif_type='like',
-                text=f"{request.user.username} liked your recipe '{recipe.title}.'"
+                recipe=recipe,
+                text=f"{request.user.username} liked your recipe '{recipe.title}'."
             )
+
     return redirect(request.META.get('HTTP_REFERER', 'dashboard_home'))
 
 
@@ -337,8 +341,10 @@ def follow_user(request, user_id):
             user=user_to_follow,
             from_user=request.user,
             notif_type='follow',
+            recipe=None,
             text=f"{request.user.username} started following you."
         )
+
     return redirect('dashboard_profile', username=user_to_follow.username)
 
 
@@ -479,27 +485,33 @@ def add_reply(request, recipe_id, comment_id):
 
     if request.method == "POST":
         reply_text = request.POST.get("reply")
-
+        messages.success(request, "Reply added.")
         reply = Reply.objects.create(
             comment=comment,
             user=request.user,
             content=reply_text
         )
+        
 
        # --- Notifications ---
         # 1. Notify recipe owner if they are not the one replying
         if recipe.user != request.user:
             Notification.objects.create(
                 user=recipe.user,
-                from_user=request.user,  # <-- set this!
+                from_user=request.user,
+                notif_type='comment',
+                recipe=recipe,
                 text=f"{request.user.username} replied to a comment on your recipe '{recipe.title}'."
             )
+
 
         # 2. Notify the original comment owner (if different from recipe owner and replier)
         if comment.user != recipe.user and comment.user != request.user:
             Notification.objects.create(
                 user=comment.user,
-                from_user=request.user,  # <-- set this!
+                from_user=request.user,
+                    notif_type='comment',
+                    recipe=recipe,  # <-- set this!
                 text=f"{request.user.username} replied to your comment on '{recipe.title}'."
             )
 
@@ -519,6 +531,8 @@ def delete_comment(request, recipe_id, comment_id):
             Notification.objects.create(
                 user=recipe.user,
                 from_user=request.user,
+                notif_type='comment',
+                recipe=recipe,
                 text=f"{request.user.username} deleted a comment on your recipe '{recipe.title}'."
             )
         
@@ -526,6 +540,8 @@ def delete_comment(request, recipe_id, comment_id):
             Notification.objects.create(
                 user=comment.user,
                 from_user=request.user,
+                notif_type='comment',
+                recipe=recipe,
                 text=f"{request.user.username} deleted your comment on '{recipe.title}'."
             )
         messages.success(request, "Comment deleted.")
@@ -550,6 +566,8 @@ def delete_reply(request, recipe_id, reply_id):
             Notification.objects.create(
                 user=recipe.user,
                 from_user=request.user,
+                notif_type='comment',
+                recipe=recipe,
                 text=f"{request.user.username} deleted a reply on your recipe '{recipe.title}'."
             )
         
@@ -557,6 +575,8 @@ def delete_reply(request, recipe_id, reply_id):
             Notification.objects.create(
                 user=reply.user,
                 from_user=request.user,
+                notif_type='comment',
+                recipe=recipe,
                 text=f"{request.user.username} deleted your reply on '{recipe.title}'."
             )
 
@@ -564,6 +584,8 @@ def delete_reply(request, recipe_id, reply_id):
             Notification.objects.create(
                 user=comment.user,
                 from_user=request.user,
+                notif_type='comment',
+                recipe=recipe,
                 text=f"{request.user.username} deleted a reply on your comment in '{recipe.title}'."
             )
         messages.success(request, "Reply deleted.")
@@ -588,17 +610,33 @@ def recipe_likes_list(request, recipe_id):
 
 
 
+from django.core.paginator import Paginator
+
 @login_required
 def notifications_view(request):
-    notifications = request.user.notifications.all().order_by('-created_at')
+    all_notifications = request.user.notifications.all().order_by('-created_at')
 
-    # Mark all unread as read
-    notifications.filter(is_read=False).update(is_read=True)
+    # Optional: mark unread as read immediately
+    all_notifications.filter(is_read=False).update(is_read=True)
+
+    page_number = request.GET.get('page', 1)
+
+    if page_number == 'all':
+        # show all notifications in one page
+        paginator = Paginator(all_notifications, all_notifications.count() or 1)  # avoid 0
+        page_obj = paginator.get_page(1)
+        has_more = False
+    else:
+        # show 20 per page
+        paginator = Paginator(all_notifications, 10)
+        page_obj = paginator.get_page(page_number)
+        has_more = paginator.num_pages > 1
 
     return render(request, "notifications.html", {
-        "notifications": notifications,
+        "page_obj": page_obj,
+        "has_more": has_more,
     })
-    
+ 
 
 
 @login_required

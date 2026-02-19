@@ -6,9 +6,9 @@
 <div class="notifications-container">
     <h2>Notifications</h2>
 
-    {% if notifications %}
+    {% if page_obj.object_list %}
         <ul class="notifications-list">
-            {% for notification in notifications %}
+            {% for notification in page_obj.object_list %}
                 <li class="notification-item {% if not notification.is_read %}unread{% endif %}">
                     {% if notification.from_user.profile.profile_image %}
                         <img src="{{ notification.from_user.profile.profile_image.url }}" class="profile-small">
@@ -25,6 +25,13 @@
                 </li>
             {% endfor %}
         </ul>
+
+        {% if has_more %}
+            <div class="view-all-container">
+                <a href="{% url 'notifications' %}?page=all" class="view-all-btn">View All →</a>
+            </div>
+        {% endif %}
+
     {% else %}
         <p class="no-notifs">You have no notifications.</p>
     {% endif %}

@@ -145,6 +145,7 @@ class Notification(models.Model):
     from_user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     notif_type = models.CharField(max_length=10, choices=NOTIF_TYPES)
     text = models.TextField()
+    recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.CASCADE)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -153,5 +154,18 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.notif_type}"
+
+    @property
+    def link(self):
+        """
+        Returns the URL to go to when this notification is clicked.
+        """
+        from django.urls import reverse
+
+        if self.notif_type in ['like', 'comment'] and self.recipe:
+            return reverse('recipe_detail', args=[self.recipe.id])
+        elif self.notif_type == 'follow' and self.from_user:
+            return reverse('dashboard_profile', args=[self.from_user.username])
+        return '#'  # fallback
 
 

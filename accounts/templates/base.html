@@ -58,6 +58,7 @@
 
 </header>
 
+
 <!-- Messages -->
 {% if messages %}
 <div id="msg-container" class="messages-container">
@@ -68,6 +69,7 @@
     {% endfor %}
 </div>
 {% endif %}
+
 
 <!-- Page Content -->
 <main>
@@ -84,18 +86,15 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch("{% url 'notifications_preview' %}")
             .then(response => response.json())
             .then(data => {
-
                 // Update dropdown content (unread only)
                 preview.innerHTML = data.html;
 
-        if (data.unread_count > 0) {
-            count.style.display = "inline-block";
-            count.textContent = data.unread_count;
-        } else {
-            count.style.display = "none";
-        }
-
-                
+                if (data.unread_count > 0) {
+                    count.style.display = "inline-block";
+                    count.textContent = data.unread_count;
+                } else {
+                    count.style.display = "none";
+                }
             })
             .catch(error => console.error("Error:", error));
     }
@@ -106,8 +105,22 @@ document.addEventListener("DOMContentLoaded", function () {
     // Auto refresh every 15 seconds
     setInterval(loadNotifications, 15000);
 
+
+    const messages = document.querySelectorAll(".alert");
+    messages.forEach((msg) => {
+        // Wait 2 seconds, then add fade-out class
+        setTimeout(() => {
+            msg.classList.add("fade-out");
+        }, 2200);
+
+        // Remove completely after transition (0.6s)
+        setTimeout(() => {
+            msg.remove();
+        }, 2600); // slightly longer than transition
+    });
 });
 </script>
+
 
 
 
