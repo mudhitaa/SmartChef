@@ -92,9 +92,9 @@ python manage.py runserver
 
 # Project Purpose
 SmartChef was built as an academic full-stack project to explore:
-    Social platforms
-    Full-stack web development
-    AI integration using LLMs
+    Social platforms, 
+    Full-stack web development, 
+    AI integration using LLMs, 
     Retrieval-Augmented Generation (RAG)
 
 
@@ -117,12 +117,12 @@ The AI-powered recipe generation module was developed and implemented by another
 
 
 # Future Improvements
-Migration of frontend to React (MERN stack transition)
-Improved recommendation system for personalized recipes
-Real-time chat feature between users
-Mobile application version
-Cloud deployment with CI/CD pipeline
-Enhanced AI response tuning for better recipe accuracy
+- Migration of frontend to React (MERN stack transition)
+- Improved recommendation system for personalized recipes
+- Real-time chat feature between users
+- Mobile application version
+- Cloud deployment with CI/CD pipeline
+- Enhanced AI response tuning for better recipe accuracy
 
 # Developer Note 
 This is my first full-stack project, developed using Python/Django stack.
