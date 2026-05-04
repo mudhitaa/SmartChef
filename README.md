@@ -131,7 +131,7 @@ This is my first full-stack project, developed using Python/Django stack.
 #  Screenshots
 
 ## Landing Page
-![Landing Page](assets/images/Landing_page.png)
+![Landing Page](assets/images/Landing_Page.png)
 ## Home Page
 ![Home Page](assets/images/home.png)
 ## Profile Page
